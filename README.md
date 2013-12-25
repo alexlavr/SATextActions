@@ -3,6 +3,22 @@ SATextActions
 
 UITextView subclass for adding conditional formatting tap and actions.
 
+<<<<<<< HEAD
+=======
+Coming soon:
+
+1. Set rule based on range or regex
+2. Set formatting rules
+3. Set tap action block for rules
+4. Set type action block for rules
+5. Save/restore range data using JSON
+
+
+Example:
+`````Objective-c
+
+
+>>>>>>> b7cfb112d165e114ccc584e2b2e5560619b246b0
 
 //Create attributed string to display
 NSAttributedString *attributedStatusString = [[NSAttributedString alloc] initWithString:string attributes:attributes];
@@ -53,4 +69,10 @@ for (NSTextCheckingResult *match in hashtagMatches) {
 
 //Set attributed string and tap actions to a SATextActions text view.
 self.textView.attributedText = attributedStatusString;
+<<<<<<< HEAD
 [self.textView setTapActions:actions]; 									
+=======
+[self.textView setTapActions:actions]; 		
+
+`````
+>>>>>>> b7cfb112d165e114ccc584e2b2e5560619b246b0
