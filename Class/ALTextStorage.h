@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface ALTextStorage : NSTextStorage
-
+- (id)initWithStyle: (NSDictionary *) attributes;
 @end

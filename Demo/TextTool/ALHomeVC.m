@@ -7,14 +7,22 @@
 //
 
 #import "ALHomeVC.h"
-#import "SATextActions.h"
+//import "SATextActions.h"
+#import "ALTextStorage.h"
+#import "ALTextViewEditable.h"
+#import "ALPickerListVC.h"
 
-@interface ALHomeVC () <UITextViewDelegate>
+@interface ALHomeVC () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate>
 {
-    
+    float _pickerHeight;            // height of the table that displays list of user picks
+    NSRange _pickerPositionInText;  // position in text where the pick should be placed
 }
-@property (strong,nonatomic) UITextView *tv;
+@property (strong, nonatomic) ALTextViewEditable *tv;
 @property (strong, nonatomic) NSLayoutConstraint *tvPosition;
+@property (strong, nonatomic) NSArray *dataUsers;
+@property (strong, nonatomic) UITableView *pickerTable;
+@property (strong, nonatomic) NSDictionary *textStyle;
+
 @end
 
 @implementation ALHomeVC
@@ -32,18 +40,46 @@
 {
     [super viewDidLoad];
 
+    _pickerHeight = 100.0;
+    
+    //Database
+    self.dataUsers = @[
+                       @{@"id":@"1", @"n":@"Bob"},
+                       @{@"id":@"2", @"n":@"Tom"},
+                       @{@"id":@"3", @"n":@"Dog"}
+                       ];
+
+    //TextKit
+    NSParagraphStyle *paragraphStyle = [NSParagraphStyle defaultParagraphStyle];
+    self.textStyle = @{
+                                NSParagraphStyleAttributeName: paragraphStyle,
+                                NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0]
+                                };
+    
+    NSDictionary *linkStyle = @{
+                                NSForegroundColorAttributeName : [UIColor blueColor],
+                                NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0]
+                                };
+    
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+    NSTextContainer *container = [[NSTextContainer alloc] initWithSize:CGSizeMake(320, CGFLOAT_MAX)];
+    container.widthTracksTextView = YES;
+    [layoutManager addTextContainer:container];
+
+    ALTextStorage *textStorage = [[ALTextStorage alloc] initWithStyle:_textStyle];
+    [textStorage addLayoutManager:layoutManager];
+    
     //Create Text View
-    self.tv = [[UITextView alloc] initWithFrame:CGRectZero];
-    self.tv.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-    self.tv.contentInset = UIEdgeInsetsZero;
-    self.tv.alwaysBounceVertical = YES;
-    self.tv.scrollEnabled = YES;
-    self.tv.delegate = self;
+    self.tv = [[ALTextViewEditable alloc] initWithFrame:CGRectZero textContainer:container];
+    //_tv.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    _tv.delegate = self;
+    _tv.linkTextAttributes = linkStyle;
+    _tv.backgroundColor = [UIColor whiteColor];
+    
     [self.view addSubview:_tv];
     
     
-    //Position Text View
-    
+    //Position Text View using AutoLayout
     
     [self.tv setTranslatesAutoresizingMaskIntoConstraints: NO];
     id topGuide = self.topLayoutGuide;
@@ -72,6 +108,7 @@
                                                     constant: 0];
     [self.view addConstraint:self.tvPosition];
     
+    self.view.backgroundColor = [UIColor lightGrayColor];
     
     [self registerForKeyboardNotifications];
 }
@@ -79,7 +116,7 @@
   //  CGRect viewBounds = self.view.bounds;
     // CGFloat topBarOffset = self.topLayoutGuide.length;
     
-
+    //NSLog(@"%@", self.tv);
 }
 
 - (void)didReceiveMemoryWarning
@@ -109,7 +146,6 @@
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
 
     self.tvPosition.constant = -kbSize.height;
-
 }
 
 // Called when the UIKeyboardWillHideNotification is sent
@@ -140,5 +176,118 @@
         }];
     }
 }
+- (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"@"])
+    {
+        
+        _pickerPositionInText = (NSRange){range.location, 1};
+        [self updateMentionPicker];
+    }
+    
+    return YES;
+}
+
+- (void) updateMentionPicker
+{
+    
+    self.tvPosition.constant += _pickerHeight;
+    [self.view addSubview:self.pickerTable];
+    
+}
+- (void) pickerSelected: (NSDictionary *) userData
+{
+    
+    //Add Link text to @ position
+    NSString *userName = userData[@"n"];
+    NSDictionary *linkData = @{NSLinkAttributeName:[NSString stringWithFormat:@"appID://user/%@", userData[@"id"]]};
+    
+    NSMutableAttributedString *pickedText = [[NSMutableAttributedString alloc] initWithString:userName];
+    [pickedText setAttributes:linkData range:(NSRange){0, [userData[@"n"] length]}];
+    
+    NSMutableAttributedString *textCurrent = [self.tv.attributedText mutableCopy];
+    [textCurrent replaceCharactersInRange:_pickerPositionInText withAttributedString:pickedText];
+    
+    //Add space after link
+    NSAttributedString *space  = [[NSAttributedString alloc] initWithString:@" " attributes:self.textStyle];
+    [textCurrent appendAttributedString:space];
+    
+    self.tv.attributedText = textCurrent;
+    
+}
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
+     NSLog(@"%@", URL);
+    if ([[URL scheme] isEqualToString:@"username"]) {
+       
+        // ...
+        return NO;
+    }
+    return YES; // let the system open this URL
+}
+// Finding the word under a touch
+/*- (void) getWordAt: (CGPoint) location
+{
+    NSLayoutManager *layoutManager = _tv.layoutManager;
+    CGPoint location = [touch locationInView:_tv];
+    NSUInteger characterIndex;
+    characterIndex = [layoutManager characterIndexForPoint:location inTextContainer:_tv.textContainer fractionOfDistanceBetweenInsertionPoints:NULL];
+    if (characterIndex < _tv.textStorage.length)
+    {
+        // valid index
+        // Find the word range here
+        // using -enumerateSubstringsInRange:options:usingBlock:
+    }
+}*/
+
+#pragma mark Picker Table
+- (UITableView* ) pickerTable
+{
+    if (!_pickerTable) {
+        
+        //Position picker at the bottom, above keyboard
+        //float pickerHeight = 220.0;
+        float pickerWidth  = CGRectGetMaxX(self.tv.frame);
+        float pickerBottom = CGRectGetMaxY(self.tv.frame);
+        float pickerTop    = pickerBottom - _pickerHeight;
+        
+        CGRect pickerPosition = (CGRect){0, pickerTop, pickerWidth, _pickerHeight};
+        
+        UITableView *table = [[UITableView alloc] initWithFrame:pickerPosition style:UITableViewStylePlain];
+        table.dataSource = self;
+        table.delegate   = self;
+
+        _pickerTable = table;
+    }
+    return _pickerTable;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.dataUsers.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"Cell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (!cell)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        
+    }
+    // Configure the cell...
+    NSDictionary *userData = self.dataUsers[indexPath.row];
+    cell.textLabel.text = userData[@"n"];
+    
+    return cell;
+}
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%@", indexPath);
+    
+    [self pickerSelected:self.dataUsers[indexPath.row]];
+}
+
 
 @end

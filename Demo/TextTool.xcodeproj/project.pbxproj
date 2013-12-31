@@ -22,6 +22,8 @@
 		D9AC583E186A532400B674AF /* ALHomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AC583D186A532400B674AF /* ALHomeVC.m */; };
 		D9AC5842186A535E00B674AF /* SATextActions.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AC5841186A535E00B674AF /* SATextActions.m */; };
 		D9AC5848186A540700B674AF /* ALTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AC5847186A540700B674AF /* ALTextStorage.m */; };
+		D9C1112C186E738F0078C583 /* ALPickerListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C1112B186E738F0078C583 /* ALPickerListVC.m */; };
+		D9C1112F186FD42C0078C583 /* ALTextViewEditable.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C1112E186FD42C0078C583 /* ALTextViewEditable.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +59,10 @@
 		D9AC5841186A535E00B674AF /* SATextActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SATextActions.m; sourceTree = "<group>"; };
 		D9AC5846186A540700B674AF /* ALTextStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTextStorage.h; sourceTree = "<group>"; };
 		D9AC5847186A540700B674AF /* ALTextStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALTextStorage.m; sourceTree = "<group>"; };
+		D9C1112A186E738F0078C583 /* ALPickerListVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALPickerListVC.h; sourceTree = "<group>"; };
+		D9C1112B186E738F0078C583 /* ALPickerListVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALPickerListVC.m; sourceTree = "<group>"; };
+		D9C1112D186FD42C0078C583 /* ALTextViewEditable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTextViewEditable.h; sourceTree = "<group>"; };
+		D9C1112E186FD42C0078C583 /* ALTextViewEditable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALTextViewEditable.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +129,8 @@
 				D955CE3B185A47FB00B93EE4 /* Supporting Files */,
 				D9AC583C186A532400B674AF /* ALHomeVC.h */,
 				D9AC583D186A532400B674AF /* ALHomeVC.m */,
+				D9C1112A186E738F0078C583 /* ALPickerListVC.h */,
+				D9C1112B186E738F0078C583 /* ALPickerListVC.m */,
 			);
 			path = TextTool;
 			sourceTree = "<group>";
@@ -163,6 +171,8 @@
 				D9AC5841186A535E00B674AF /* SATextActions.m */,
 				D9AC5846186A540700B674AF /* ALTextStorage.h */,
 				D9AC5847186A540700B674AF /* ALTextStorage.m */,
+				D9C1112D186FD42C0078C583 /* ALTextViewEditable.h */,
+				D9C1112E186FD42C0078C583 /* ALTextViewEditable.m */,
 			);
 			name = Class;
 			path = ../../Class;
@@ -265,6 +275,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9AC5842186A535E00B674AF /* SATextActions.m in Sources */,
+				D9C1112C186E738F0078C583 /* ALPickerListVC.m in Sources */,
+				D9C1112F186FD42C0078C583 /* ALTextViewEditable.m in Sources */,
 				D9AC5848186A540700B674AF /* ALTextStorage.m in Sources */,
 				D955CE41185A47FB00B93EE4 /* main.m in Sources */,
 				D9AC583E186A532400B674AF /* ALHomeVC.m in Sources */,
