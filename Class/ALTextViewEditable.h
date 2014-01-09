@@ -10,4 +10,8 @@
 
 @interface ALTextViewEditable : UITextView
 @property (strong, nonatomic) NSDictionary *attributesText;
+
+- (NSRange) rangeForLinkAtIndex: (NSUInteger) charIndex;
+
+
 @end

@@ -57,7 +57,7 @@
                                 };
     
     NSDictionary *linkStyle = @{
-                                NSForegroundColorAttributeName : [UIColor blueColor],
+                                NSForegroundColorAttributeName : [UIColor blackColor],
                                 NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0]
                                 };
     
@@ -178,6 +178,26 @@
 }
 - (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
+    //Do not allow to edit link
+    // It can be only selected to be removed
+    for (NSUInteger c = range.location; c<= range.location+range.length; c++)
+    {
+        if (c >= textView.attributedText.length) break;
+        NSRange linkRange = [self.tv rangeForLinkAtIndex:c];
+        if (linkRange.location != NSNotFound)
+        {
+                
+            if (self.tv.selectedRange.location == linkRange.location && self.tv.selectedRange.length == linkRange.length && [text isEqualToString:@""]) {
+                return YES;
+            } else {
+                self.tv.selectedRange = linkRange;
+                return NO;
+            }
+        }
+    }
+    
+    
+    //Check if user is getting mentioned
     if ([text isEqualToString:@"@"])
     {
         
@@ -288,6 +308,7 @@
     
     [self pickerSelected:self.dataUsers[indexPath.row]];
 }
+
 
 
 @end
